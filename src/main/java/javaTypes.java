@@ -1,5 +1,3 @@
-package com.core.java_basics;
-  
 public class javaTypes {
 
     // 'psvm' ile main methodu hızlıca oluşturulabilir.
@@ -8,12 +6,8 @@ public class javaTypes {
         // 'sout' ile print fonksiyonu hızlıca oluşturulabilir.
         System.out.println("Hello World");
 
-        // Variable naming rules;
-        // 1-) camelCase kullanılır.
-        // 2-) _ veya $ ile başlanabilir.
-        // 3-) Sayı ile bitebilir ama sayı ile başlanmaz.
-
         // 1. Primitive Types: 8 adettir. Hepsi küçük harfle başlar. 'NULL' değeri alamazlar.
+            // String bir primitive değildir çünkü null değeri alabilir.
             // Tam sayılar (4 ADET)
                 byte b1 = 127;  byte b2 = -128;
                 short s1 = 12345; short s2 = -12345;
@@ -34,12 +28,7 @@ public class javaTypes {
         // 3. Reference Types 
         // 4. Object Types  
         // 5. Array Types 
-        // 6. Collection Types
-
-
-        // 'final' Constant değişken oluştururken kullanılır.
-        final int itemCount = 260;
-        
+        // 6. Collection Types 
     }
 }
 

@@ -69,13 +69,12 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
-        <!-- Exec plugin'i ekliyoruz -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>3.1.0</version>
           <configuration>
-            <mainClass>com.core.java_basics.javaTypes</mainClass>
+            <mainClass>basics.App</mainClass>
           </configuration>
         </plugin>
       </plugins>
