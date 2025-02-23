@@ -6,13 +6,22 @@ public class ProblemSolver {
 
     Scanner scanner = new Scanner(System.in); 
 
-    public int oneVariableEquationSolving() {
-
-        System.out.println("Basit tek bilinmeyenli denklem çözümü\n" +
-        "sizden a ve b değerlerini alarak ax + b = 0 denklemini çözeceğim.");
+    public double oneVariableEquationSolving() {
         
+        System
+        .out
+        .println("""
+        Basit tek bilinmeyenli denklem çözümü
+        sizden a ve b değerlerini alarak ax + b = 0 denklemini çözeceğim.
+        Lütfen sırasıyla 'a' ve 'b' (TAM SAYI) değerlerinizi giriniz...
+        """);
+    
+        double a = scanner.nextInt();
+        double b = scanner.nextInt();
 
-        return 0;
+        double result = (-b / a);
+        
+        scanner.close();
+        return result;
     }
-
 }

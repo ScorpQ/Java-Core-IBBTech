@@ -5,6 +5,6 @@ public class App
     public static void main( String[] args )
     {
         ProblemSolver Solver = new ProblemSolver();
-        Solver.oneVariableEquationSolving();
+        System.out.println(Solver.oneVariableEquationSolving());
     }
 }

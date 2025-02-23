@@ -1,5 +1,7 @@
 ### **JAVA DOSYASI NASIL ÇALIŞTIRILIR?**
 
+https://stackoverflow.com/questions/16137713/how-do-i-run-a-java-program-from-the-command-line-on-windows
+
 - CD src/ yapmadan kök dizinden çalıştırmak istersek aşağıdaki komutlar yeterli.
  ```java
 ### Derleme için
