@@ -1,5 +1,50 @@
 ### **JAVA DOSYASI NASIL ÇALIŞTIRILIR?**
 
+- CD src/ yapmadan kök dizinden çalıştırmak istersek aşağıdaki komutlar yeterli.
+ ```java
+### Derleme için
+javac src/main/java/AlgorithmSo/ProblemSolver.java
+
+### Çalıştırma için
+java -cp src/main/java AlgorithmSo.ProblemSolver
+```
+
+- CD src/ yaparak hedef dizine gidersek aşağıdaki komutlar yeterli
+ ```java
+### Derleme için
+javac AlgorithmSo/ProblemSolver.java
+
+### Çalıştırma için
+java AlgorithmSo.ProblemSolver
+```
+
+- Java 8'den itibaren javac ile derlemeye gerek yok doğrudan java ile run edilebilir.
+Çünkü ...
+
+- Not: Eğer iki farklı ve birbiriyle bağlantılı dosyada çalıştıysak aynı anda derlememiz lazım, daha sonra tekrardan merkez dosyayı çalıştırırız.
+
+```java
+### Derleme için
+javac src/main/java/AlgorithmSolving/ProblemSolver.java   src/main/java/App.java
+
+### Çalıştırma için
+java -cp src/main/java App
+
+```
+
+**YA DA** Tüm bunlarla uğraşmak yerine doğrudan MAVEN ile çalıştırabilirsin böylece dosyaları topluca derleyip sonra da çalıştırmana gerek kalmaz.
+
+```java
+### Derlemek için
+mvn compile // Sanırım mvn exec:java zaten derliyor?
+
+### Derlemek ve Çalıştırma için
+mvn exec:java -Dexec.mainClass="App"
+
+//src/main/java'nın altında, paketin içinde olsaydı 'Package.App' olmalıydı.
+```
+
+- Terminal yerine F5 ile çalıştırabilirsin (MacOS: world fn + f5)
 
 ----------------------------------------------------------------------------------------------------------
 
@@ -51,6 +96,8 @@ JDK zaten JRE'yi içerdiği için JDK her türlü çalıştırır.**
 
 
 ### **Naming Conventions**
+
+https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html
  
 - Değişkenler için;
   - CamelCase kullanılır, '_' veya '$' ile başlanabilir.
@@ -121,3 +168,4 @@ JDK zaten JRE'yi içerdiği için JDK her türlü çalıştırır.**
   // Unboxing Örnekleri (wrapper -> primitive)
   Integer wrapperSayi = new Integer(100);
   int primitiveSayi = wrapperSayi;      // Otomatik dönüşüm
+  ```
