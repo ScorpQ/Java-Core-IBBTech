@@ -1,10 +1,8 @@
 public class javaTypes {
-
-    // 'psvm' ile main methodu hızlıca oluşturulabilir.
     public static void main(String[] args) {
 
         // 'sout' ile print fonksiyonu hızlıca oluşturulabilir.
-        System.out.println("Hello World");
+        // 'psvm' ile main methodu hızlıca oluşturulabilir.
 
         // 1. Primitive Types: 8 adettir. Hepsi küçük harfle başlar. 'NULL' değeri alamazlar.
             // String bir primitive değildir çünkü null değeri alabilir.

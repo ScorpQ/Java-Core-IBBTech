@@ -5,8 +5,7 @@ import java.util.Scanner;
 public class ProblemSolver {
 
     Scanner scanner = new Scanner(System.in); 
-
-    // 2. Example 
+    // 1. Example 
     public double oneVariableEquationSolving() {
         System
         .out
@@ -25,11 +24,12 @@ public class ProblemSolver {
         return result;
     }
 
+    // 2. Example
     public String returnContinueBreak() {
         System
         .out
         .println("""
-            
+
             Kullanıcının verdiği pozitif sayıya kadar toplayan algoritma.
             Ama girilen sayı 100'den büyükse 100'e kadar toplasın, ayrıca toplanırken sayıların arasında
             47 varsa 47'yi toplamanın dışında tutsun.
@@ -55,6 +55,8 @@ public class ProblemSolver {
        
             sumResult += i;
         }
+
+        scanner.close();
         return ("Sonuç: " + sumResult + ".\nSayı" + (sumResult%2 == 0 ? " Çift" : " Tek"));
     }
 }
