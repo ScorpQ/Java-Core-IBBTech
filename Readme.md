@@ -289,8 +289,81 @@ https://www.oracle.com/java/technologies/javase/codeconventions-namingconvention
 3. **Genel Kural:**
    - Primitive tip yeterliyse `parseInt()`
    - Obje gerekiyorsa `valueOf()`
-   - Cache önemliyse `valueOf()`
+   - Cache önemliyse `valueOf()` 
 
 
+----------------------------------------------------------------------------------------------------------
+
+  ### **FINAL**
+
+ - Değişkende kulllanıyorsak asla yeni bir değer atanamaz hale gelir.
+
+ - Eğer class'ta kullandıysam extend edemeyiz.
+
+ - Eğer method'ta kullandıysam override yapamayız. (Ezemeyiz)
+
+ ----------------------------------------------------------------------------------------------------------
+
+   ### **JAVA'DA ADRESLEME**
 
 
+  #### STACK 
+  - LIFO mantığı ile çalışır. Primitive türler stack'te tutulur. 
+
+  ```java
+    | C++ Kitabı     | <- En son eklenen (pop ile ilk bu çıkar)
+    |----------------|
+    | Python Kitabı  | <- Ortadaki kitap
+    |----------------|
+    | Java Kitabı    | <- İlk eklenen (en son bu çıkar)
+    |----------------| 
+
+
+  // Stack'te oluşturulur.
+  int x = 5;        
+  // Stack'te oluşturulur.
+  int y = 10;      
+  // Stack'te tutulur.
+  int toplam = x + y;
+  ```
+
+  #### HEAP 
+
+  - LIFO mantığı yoktur. İstenilen veri çıkarılabilir.  Object'ler, Primitive türlerin dizileri ve Autoboxing yapılan değişkenler Heap'te tutulur. 
+
+```java
+       1
+      / \
+     2   8
+    /
+   5
+
+   // Heap - Herhangi bir elemana erişim
+  PriorityQueue<Integer> heap = new PriorityQueue<>();
+  heap.add(1);
+  heap.add(2);
+  heap.add(8);
+  int enKucuk = heap.poll(5); // 5 çıkar (MinHeap olduğu için)
+```
+- Yukarıda heap benzeri bir görsel koyuldu.  Özet:
+  Stack:
+    - LIFO (Son Giren İlk Çıkar)
+    
+    - Hızlı erişim
+    
+    - Sınırlı boyut
+    
+    - Otomatik bellek yönetimi
+    
+  Heap:
+    - Sıralı veya sırasız erişim
+    
+    - Dinamik boyut
+    
+    - Daha yavaş erişim
+    
+    - Garbage Collector ile yönetim
+
+     ----------------------------------------------------------------------------------------------------------
+
+### **GARBAGE COLLECTOR**
