@@ -171,3 +171,126 @@ https://www.oracle.com/java/technologies/javase/codeconventions-namingconvention
   Integer wrapperSayi = new Integer(100);
   int primitiveSayi = wrapperSayi;      // Otomatik dönüşüm
   ```
+
+  ----------------------------------------------------------------------------------------------------------
+
+  ### **String Yapısı**
+  Javascript'te benzer çok methodu bulunuyor:
+    
+    .trim()
+    .equals()
+    .concat()
+    .endsWith()
+    .substring()
+    .startsWith()
+    .equalsIgnoreCase()
+  
+  **Java'da "==" ile ".equals()" farkı**
+
+   ```java
+  String word1 = 'TEST'
+  String word2 = 'TEST'
+
+  word1 == word2 
+  // Bu ifade bize true döndürecek ama sebebi içeriğin aynı olması değil.
+
+  word1.equals(word2)
+  // Bu ifade de bize true döndürecek çünkü içerik aynı.
+  ```
+
+  Temel Fark :
+  - `==` : Referans karşılaştırması yapar (hafızadaki adreslerini karşılaştırır)
+
+  - `equals()` : İçerik karşılaştırması yapar (metinlerin değerlerini karşılaştırır)
+
+  ```java
+    String a = "merhaba"; // String Pool'da oluşturulur
+    String b = "merhaba"; // Aynı String Pool'daki referansı kullanır
+    String c = new String("merhaba"); // Heap'te yeni bir nesne oluşturur
+
+    System.out.println(a == b);       // true (aynı referans)
+    System.out.println(a == c);       // false (farklı referans)
+    System.out.println(a.equals(c));  // true (aynı değer)
+
+    HAFIZA
+    |----------------------------------|
+    |                                  |
+    |   HEAP (Genel Hafıza Alanı)     |
+    |   |-----------------------|     |
+    |   |  String Pool         |     |
+    |   |  |--------------"|   |     |
+    |   |  | "Ahmet"   <--|---|--------- string1
+    |   |  |            <--|---|--------- string2
+    |   |  |              |   |     |
+    |   |  |--------------"|   |     |
+    |   |                     |     |
+    |   |  "Ahmet" <------------|-------- object1
+    |   |  "Ahmet" <------------|-------- object1
+    |   |                     |     |
+    |   |-----------------------|     |
+    |                                  |
+    |----------------------------------|
+  ```
+
+  - String Pool, aynı değere sahip String'lerin bellekte tek bir kopya olarak saklanmasını sağlar.
+  
+  - Bellek kullanımını optimize eder.
+  - Literal String'ler otomatik olarak String Pool'da saklanır.
+  - new String() kullanımı String Pool'u bypass eder.
+
+
+----------------------------------------------------------------------------------------------------------
+
+  ### **CASTING**
+  Tipler arasında dönüşüm yapmamızı sağlar.  
+
+  ```java
+  // Widening Cast - Implicit Cast
+  byte castType1 = 100;
+  int castType2 = cartType1;
+
+  //  Narrowing Cast - Explicit Cast
+  int castType1 = 99999999
+  byte castType2 = castType1
+  // Bu kısımda "castType2" -1 olur.
+
+  // Char To Int
+  char charType = '&'
+  int ascii = charType
+  // ascii = 38 olur.
+  int ascii = 38
+  char charTpe = ascii
+  // charType = & olur.
+
+  // String to Int
+  String castString = "22"
+  int castInt1 = Integer.valueOf(castString)
+  int castInt1 = Integer.parseInt(castString)
+  ```
+  ### 'valueOf' ile 'parseInt' farkı nedir? 
+
+  - Şöyle, parseInt primitive int döndürürken
+  valueOf Integer objesi döndürür. 
+
+### parseInt vs valueOf Karşılaştırması
+
+1. **parseInt:**
+   - Primitive int döndürür
+   - Biraz daha hızlıdır
+   - Cache mekanizması yoktur
+   - Sadece sayısal dönüşüm için kullanılır
+
+2. **valueOf:**
+   - Integer objesi döndürür
+   - Cache mekanizması vardır (-128 ile 127 arası)
+   - Nesne yönelimli programlamada tercih edilir
+   - Daha esnek kullanım sunar
+
+3. **Genel Kural:**
+   - Primitive tip yeterliyse `parseInt()`
+   - Obje gerekiyorsa `valueOf()`
+   - Cache önemliyse `valueOf()`
+
+
+
+
