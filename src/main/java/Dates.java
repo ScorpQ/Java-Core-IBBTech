@@ -1,4 +1,8 @@
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Locale;
 
 public class Dates {
     public static void dateMethods() {
@@ -26,7 +30,7 @@ public class Dates {
         return specialFormat;
     }
 
-    // 2. Modern Yöntem
+    // 2. Ortalama Yöntem
     public static String dateFormattingModern() throws NullPointerException {
         Date now = new Date();
         return String.format(
@@ -37,17 +41,38 @@ public class Dates {
         );
     }
 
-    // 3. Best Practice Yöntem
+    // 3. Best Practice Yöntem eğer Java 8 öncesi kullanıyorsak :)
     public static String dateFormattingBestPractice() throws NullPointerException {
-        return new Date(String.format(
-            "Zaman: %2d:%2d:%2d", 
-            now.getHours(), 
-            now.getMinutes(), 
-            now.getSeconds()
-        )).toString();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MMMM-dd HH:mm:ss", new Locale("tr", "TR"));
+        return String.format("Şimdiki zaman: %s", df.format(new Date()));
+    }
+
+
+
+    //-------------------------------- Gerçek Modern Date Formatting --------------------------------
+
+    public static void localDateTimeFormattingGET() {
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("Gün: " + now.getDayOfMonth());
+        System.out.println("Ay: " + now.getMonthValue());
+        System.out.println("Yıl: " + now.getYear());
+        System.out.println("Saat: " + now.getHour());
+        System.out.println("Dakika: " + now.getMinute());
+        System.out.println("Saniye: " + now.getSecond());
+    }
+
+    public static void localDateTimeFormattingSET() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime newSetterDate = now.withDayOfMonth(10)
+        .withMonth(10)
+        .withYear(2025)
+        .withHour(10)
+        .withMinute(10)
+        .withSecond(10);
+        System.out.println("Değiştirilmiş tarih: " + newSetterDate);
     }
 
     public static void main(String[] args) {
-        System.out.println(dateFormattingModern());
+        localDateTimeFormattingGET();
     }
 }
