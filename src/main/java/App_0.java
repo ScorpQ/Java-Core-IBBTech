@@ -1,6 +1,6 @@
 import AlgorithmSolving.ProblemSolver;
 
-public class App 
+public class App_0 
 {
     public static void main( String[] args )
     {

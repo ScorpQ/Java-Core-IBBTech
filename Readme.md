@@ -367,3 +367,9 @@ https://www.oracle.com/java/technologies/javase/codeconventions-namingconvention
      ----------------------------------------------------------------------------------------------------------
 
 ### **GARBAGE COLLECTOR**
+
+  Garbarage Collectors:
+  Yalnızca ama yalnızca kapalı olmayan dosya, scanner, formatter vb yapılarda 
+  otomatik kapanmaz eğer biz bunu manuel olarak kapatmazsak bu kapatılmayan 
+  nesneyi temizleyebilir ancak açık olan dosyayı kapatmazsak cache belleği 
+  kullanmaya devam eder.
