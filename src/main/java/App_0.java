@@ -1,12 +1,14 @@
 import AlgorithmSolving.ProblemSolver;
+import P1_PROJECT.SpaceMarineManagement;
 
 public class App_0 
 {
     public static void main( String[] args )
     {
-        ProblemSolver Solver = new ProblemSolver();
-        for(;;){
-            System.out.println(Solver.returnContinueBreak());
-        }
+        ProblemSolver solver = new ProblemSolver();
+        SpaceMarineManagement spaceMarineManagement = new SpaceMarineManagement();
+        
+        
+        spaceMarineManagement.saveSpaceMarinesToFile();
     }
 }
