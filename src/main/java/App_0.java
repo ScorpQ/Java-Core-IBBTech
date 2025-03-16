@@ -9,6 +9,6 @@ public class App_0
         SpaceMarineManagement spaceMarineManagement = new SpaceMarineManagement();
         
         
-        spaceMarineManagement.saveSpaceMarinesToFile();
+        spaceMarineManagement.choose();
     }
 }

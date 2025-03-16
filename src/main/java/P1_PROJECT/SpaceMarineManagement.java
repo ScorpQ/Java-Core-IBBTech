@@ -2,7 +2,12 @@ package P1_PROJECT;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class SpaceMarineManagement {
 
@@ -16,7 +21,7 @@ public class SpaceMarineManagement {
     // Çünkü primitive tipler stack'te saklanır.
     private ArrayList<SpaceMarineDTO> SpaceMarineDTOList = new ArrayList<>();
     private static final String FILE_NAME = "spaceMarinesFile.txt";
-    private Long counter = 0L;
+    private long marineCounter = 0L;
 
 
     // Constructor
@@ -24,10 +29,60 @@ public class SpaceMarineManagement {
         loadSpaceMarinesFromFile();
     }
 
+    public void choose() {
+        Scanner scanner = new Scanner(System.in);
+        byte selected = 0;
+        while(true) {
+            System.out.println(
+            "İşlem seçiniz\n" +
+                "\t 1 - Space Marine Ekle" +
+                "\t 2 - Space Marine Listele" +
+                "\t 3 - Space Marine Ara" +
+                "\t 4 - Space Marine Güncelle" +
+                "\t 5 - Space Marine Sil" +
+                "\t 6 - Toplam Space Marine Sayısı" +
+                "\t 7 - Dosya kaydetme" +
+                "\t 8 - Space Marine Rastgele Getir" +
+                "\t 9 - Space Marine Güç Hesaplama" +
+                "\t 10 - Space Marine En Çok Kill Count ve En az kill count" +
+                "\t 11 - Space Marine Doğum Tarihlerine Göre Sıralama"
+            );
+            selected = scanner.nextByte();
+
+            switch(selected) {
+                case 1:
+                SpaceMarineDTO spaceMarine = new SpaceMarineDTO();
+                System.out.println("Space Marine Adı:");
+                spaceMarine.setName(scanner.nextLine());
+                
+                System.out.println("Space Marine Soyadı:");
+                spaceMarine.setSurname(scanner.nextLine());
+                
+                System.out.println("Space Marine Doğum tarihi (yyyy-MM-dd HH:mm):");
+                String dateStr = scanner.nextLine();
+                spaceMarine.setBirthDate(LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                    
+                System.out.println("Space Marine Silahı:");
+                spaceMarine.setMainWeapon(scanner.nextLine());
+
+                System.out.println("Space Marine Puanı:");
+                spaceMarine.setGrade((float) scanner.nextDouble());
+
+                SpaceMarineDTOList.add(spaceMarine);
+                break;
+            }
+
+            if(selected == 0) {
+                break;
+            }
+        }
+    }
+
     public void loadSpaceMarinesFromFile() {
-        try(FileInputStream reader = new FileInputStream(FILE_NAME)) {
-            SpaceMarineDTOList = reader.read();
-            System.out.println(reader.read());
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(
+            new FileInputStream(FILE_NAME))) {
+            SpaceMarineDTOList = (ArrayList<SpaceMarineDTO>) objectInputStream.readObject();
+            marineCounter = SpaceMarineDTOList.size();
         } catch (Exception e) {
             // TODO: handle exception
         }

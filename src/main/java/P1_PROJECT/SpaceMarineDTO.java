@@ -16,6 +16,7 @@ public class SpaceMarineDTO implements Serializable{
     // Fields
     private int id;
     private String name;
+    private String surname;
     private LocalDateTime birthDate;
     private String mainWeapon;
     private Date createdDate;
@@ -25,6 +26,7 @@ public class SpaceMarineDTO implements Serializable{
     public SpaceMarineDTO() {
         this.id = 0;
         this.name = "";
+        this.surname = "";
         this.birthDate = LocalDateTime.now();
         this.grade = 0;
         this.mainWeapon = "";
@@ -53,6 +55,14 @@ public class SpaceMarineDTO implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public LocalDateTime getBirthDate() {
