@@ -7,8 +7,6 @@ public class App_0
     {
         ProblemSolver solver = new ProblemSolver();
         SpaceMarineManagement spaceMarineManagement = new SpaceMarineManagement();
-        
-        
         spaceMarineManagement.choose();
     }
 }

@@ -24,6 +24,10 @@ public class SpaceMarineManagement {
     private static final String FILE_NAME = "spaceMarinesFile.txt";
     private long marineCounter = 0L;
 
+    static {
+        System.out.println(BLUE + "Space Marine Management System" + RESET);
+    }
+
 
     // Constructor
     public SpaceMarineManagement() {
@@ -36,22 +40,22 @@ public class SpaceMarineManagement {
         while(true) {
             System.out.println(
             "İşlem seçiniz\n" +
-                "\t 1 - Space Marine Ekle" +
-                "\t 2 - Space Marine Listele" +
-                "\t 3 - Space Marine Ara" +
-                "\t 4 - Space Marine Güncelle" +
-                "\t 5 - Space Marine Sil" +
-                "\t 6 - Toplam Space Marine Sayısı" +
-                "\t 7 - Dosya kaydetme" +
-                "\t 8 - Space Marine Rastgele Getir" +
-                "\t 9 - Space Marine Güç Hesaplama" +
-                "\t 10 - Space Marine En Çok Kill Count ve En az kill count" +
-                "\t 11 - Space Marine Doğum Tarihlerine Göre Sıralama"
+                "\t\n 1 - Space Marine Ekle" +
+                "\t\n 2 - Space Marine Listele" +
+                "\t\n 3 - Space Marine Ara" +
+                "\t\n 4 - Space Marine Güncelle" +
+                "\t\n 5 - Space Marine Sil" +
+                "\t\n 6 - Toplam Space Marine Sayısı" +
+                "\t\n 7 - Dosya kaydetme" +
+                "\t\n 8 - Space Marine Rastgele Getir" +
+                "\t\n 9 - Space Marine Güç Hesaplama" +
+                "\t\n 10 - Space Marine En Çok Kill Count ve En az kill count" +
+                "\t\n 11 - Space Marine Doğum Tarihlerine Göre Sıralama"
             );
 
             // Seçim yapılır 
             selected = scanner.nextByte();
-            //scanner.nextLine(); NEDEN LAZIM?????
+            scanner.nextLine(); // nextByte kullandıktan sonra kalan '\n' ifadesini okumak için lazım.
 
             switch(selected) {
                 case 1:
@@ -76,8 +80,7 @@ public class SpaceMarineManagement {
                     System.out.println("Space Marine Success Mission Count...");
                     spaceMarine.setSuccessMissionCount(scanner.nextInt());
 
-                    System.out.println("Space Marine Puanı:");
-                    spaceMarine.setGrade();
+                    spaceMarine.setGrade(); //Buna gerek olmayabilir. Kontrol edicez dosyadan.
 
                     this.addSpaceMarine(spaceMarine);
                 break;
@@ -89,6 +92,45 @@ public class SpaceMarineManagement {
                 case 3:
                     System.out.println("Space Marine Name...");
                     this.searchSpaceMarine(scanner.nextLine());
+                break;
+
+                case 4:
+                    System.out.println("Güncellenecek İstediğin Space Marine ID'sini giriniz...");
+                    Long id = scanner.nextLong();
+                    System.out.println("Space Marine Name...");
+                    String name = scanner.nextLine();
+                    System.out.println("Space Marine Surname...");
+                    String surname = scanner.nextLine();
+                    System.out.println("Space Marine Birth Date (yyyy-MM-dd HH:mm)...");
+                    String dateInput = scanner.nextLine();
+                    LocalDateTime birthDate = LocalDateTime.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                    System.out.println("Space Marine Main Weapon...");
+                    String mainWeapon = scanner.nextLine();
+                    System.out.println("Space Marine Kill Count...");
+                    int killCount = scanner.nextInt();
+                    System.out.println("Space Marine Success Mission Count...");
+                    int successMissionCount = scanner.nextInt();
+
+                    try {
+                        this.updateSpaceMarine(id, new SpaceMarineDTO(name, birthDate, surname, mainWeapon, successMissionCount, killCount));
+                    } catch (SpaceMarineNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                break;
+
+                case 5:
+                    System.out.println("Silinecek Space Marine ID'sini giriniz...");
+                    this.deleteSpaceMarine(scanner.nextLong()); 
+                break;
+
+                case 6:
+                    System.out.println(BLUE + String.format("Total Space Marine Count %n", SpaceMarineDTOList.size()) + RESET);
+                break;
+
+                case 7:
+                break;
+
+                case 8:
                 break;
             }
 
@@ -136,7 +178,6 @@ public class SpaceMarineManagement {
         SpaceMarineDTOList.add(new SpaceMarineDTO(
             spaceMarine.getName(),
             spaceMarine.getBirthDate(),
-            spaceMarine.getGrade(),
             spaceMarine.getSurname(),
             spaceMarine.getMainWeapon(), 
             spaceMarine.getSuccessMissionCount(), 

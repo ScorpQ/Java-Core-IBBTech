@@ -49,7 +49,7 @@ public class SpaceMarineDTO implements Serializable{
     }
 
     // Constructor parametreli
-    public SpaceMarineDTO(String name, LocalDateTime birthDate, float grade, String surname, String mainWeapon, int successMissionCount, int killCount) {
+    public SpaceMarineDTO(String name, LocalDateTime birthDate, String surname, String mainWeapon, int successMissionCount, int killCount) {
         this.id = 5;
         this.name = name;
         this.grade = calculateGrade();
