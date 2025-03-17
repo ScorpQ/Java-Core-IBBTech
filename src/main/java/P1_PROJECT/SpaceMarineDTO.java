@@ -9,35 +9,64 @@ import java.time.LocalDateTime;
 // Birden fazla class eklemek,
 
 public class SpaceMarineDTO implements Serializable{
+    
+    // Uyarı kodları
+    public static final String RED = "\033[0;31m"; 
+    public static final String YELLOW = "\033[0;33m";
+    public static final String RESET = "\033[0m"; 
+    
+    static {
+        System.out.println(
+            YELLOW + "SpaceMarineDTO classı yüklendi." + RESET
+        );
+    }
 
     // Serileştirme
     public static final Long serialVersionNumber = 1L;
-
+    
     // Fields
     private int id;
     private String name;
+    private float grade; // calculated with killCount and successMissionCount
+    private Integer killCount;
     private String surname;
-    private LocalDateTime birthDate;
-    private String mainWeapon;
     private Date createdDate;
-    private float grade;
+    private String mainWeapon;
+    private Integer successMissionCount;
+    private LocalDateTime birthDate;
 
     // Constructor parametresiz
     public SpaceMarineDTO() {
-        this.id = 0;
+        this.id = 5;
         this.name = "";
-        this.surname = "";
-        this.birthDate = LocalDateTime.now();
         this.grade = 0;
+        this.killCount = 0;
+        this.surname = "";
+        this.createdDate = new Date(System.currentTimeMillis());
         this.mainWeapon = "";
+        this.successMissionCount = 0;
+        this.birthDate = LocalDateTime.now();
     }
 
     // Constructor parametreli
-    public SpaceMarineDTO(int id, String name, LocalDateTime birthDate, float grade) {
-        this.id = id;
+    public SpaceMarineDTO(String name, LocalDateTime birthDate, float grade, String surname, String mainWeapon, int successMissionCount, int killCount) {
+        this.id = 5;
         this.name = name;
+        this.grade = calculateGrade();
+        this.killCount = killCount;
+        this.surname = surname;
+        this.createdDate = new Date(System.currentTimeMillis());
+        this.mainWeapon = mainWeapon;
+        this.successMissionCount = successMissionCount;
         this.birthDate = birthDate;
-        this.grade = grade;
+    }
+
+    public float calculateGrade() {
+        if(killCount == null || successMissionCount == null) {
+            return 0;
+        } else {
+            return (float) (this.successMissionCount * 0.6 + this.killCount * 0.4);
+        }
     }
 
     // Methodlar  
@@ -76,9 +105,9 @@ public class SpaceMarineDTO implements Serializable{
     public float getGrade() {
         return grade;
     }
-    
-    public void setGrade(float grade) {
-        this.grade = grade;
+
+    public void setGrade() {
+        this.grade = calculateGrade();
     }
 
     public String getMainWeapon() {
@@ -87,5 +116,25 @@ public class SpaceMarineDTO implements Serializable{
     
     public void setMainWeapon(String mainWeapon) {
         this.mainWeapon = mainWeapon;
+    }
+
+    public int getSuccessMissionCount() {
+        return successMissionCount;
+    }
+
+    public void setSuccessMissionCount(int successMissionCount) {
+        if(successMissionCount < 0) {
+            throw new IllegalArgumentException("Success mission count cannot be negative");
+        }
+        this.successMissionCount = successMissionCount;
+        this.grade = calculateGrade();
+    }
+
+    public int getKillCount() {
+        return killCount;
+    }
+
+    public void setKillCount(int killCount) {
+        this.killCount = killCount;
     }
 }

@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import P1_PROJECT.CustomExceptions.SpaceMarineNotFoundException;
 public class SpaceMarineManagement {
 
     // Uyarı kodları
     public static final String RED = "\033[0;31m"; 
     public static final String YELLOW = "\033[0;33m";
     public static final String RESET = "\033[0m"; 
+    public static final String BLUE = "\033[0;34m";
 
     // Fields
     // ArrayList heap'te saklandığı için primitive tipleri tutamaz,
@@ -47,28 +48,47 @@ public class SpaceMarineManagement {
                 "\t 10 - Space Marine En Çok Kill Count ve En az kill count" +
                 "\t 11 - Space Marine Doğum Tarihlerine Göre Sıralama"
             );
+
+            // Seçim yapılır 
             selected = scanner.nextByte();
+            //scanner.nextLine(); NEDEN LAZIM?????
 
             switch(selected) {
                 case 1:
-                SpaceMarineDTO spaceMarine = new SpaceMarineDTO();
-                System.out.println("Space Marine Adı:");
-                spaceMarine.setName(scanner.nextLine());
-                
-                System.out.println("Space Marine Soyadı:");
-                spaceMarine.setSurname(scanner.nextLine());
-                
-                System.out.println("Space Marine Doğum tarihi (yyyy-MM-dd HH:mm):");
-                String dateStr = scanner.nextLine();
-                spaceMarine.setBirthDate(LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                    SpaceMarineDTO spaceMarine = new SpaceMarineDTO();
+
+                    System.out.println("Space Marine Name...");
+                    spaceMarine.setName(scanner.nextLine());
                     
-                System.out.println("Space Marine Silahı:");
-                spaceMarine.setMainWeapon(scanner.nextLine());
+                    System.out.println("Space Marine Surname...");
+                    spaceMarine.setSurname(scanner.nextLine());
+                    
+                    System.out.println("Space Marine Birth Date (yyyy-MM-dd HH:mm)...");
+                    String dateStr = scanner.nextLine();
+                    spaceMarine.setBirthDate(LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                        
+                    System.out.println("Space Marine Main Weapon...");
+                    spaceMarine.setMainWeapon(scanner.nextLine());
 
-                System.out.println("Space Marine Puanı:");
-                spaceMarine.setGrade((float) scanner.nextDouble());
+                    System.out.println("Space Marine Kill Count...");
+                    spaceMarine.setKillCount(scanner.nextInt());
 
-                SpaceMarineDTOList.add(spaceMarine);
+                    System.out.println("Space Marine Success Mission Count...");
+                    spaceMarine.setSuccessMissionCount(scanner.nextInt());
+
+                    System.out.println("Space Marine Puanı:");
+                    spaceMarine.setGrade();
+
+                    this.addSpaceMarine(spaceMarine);
+                break;
+
+                case 2:
+                    this.listSpaceMarines();
+                break;
+
+                case 3:
+                    System.out.println("Space Marine Name...");
+                    this.searchSpaceMarine(scanner.nextLine());
                 break;
             }
 
@@ -83,9 +103,22 @@ public class SpaceMarineManagement {
             new FileInputStream(FILE_NAME))) {
             SpaceMarineDTOList = (ArrayList<SpaceMarineDTO>) objectInputStream.readObject();
             marineCounter = SpaceMarineDTOList.size();
+
+            System.out.println(BLUE + String.format("Loaded %d space marines from file.", SpaceMarineDTOList.size()) + RESET);
         } catch (Exception e) {
             // TODO: handle exception
         }
+/*         catch (FileNotFoundException fileNotFoundException) {
+            System.out.println(RED + " Dosyadan yüklenen Space Marine Kaydı bulunamadı " + RESET);
+            fileNotFoundException.printStackTrace();
+            
+        } catch (IOException io) {
+            System.out.println(RED + " Dosya Okuma Hatası" + RESET);
+            io.printStackTrace();
+            
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } */
     }
 
     public void listSpaceMarines() {
@@ -94,28 +127,52 @@ public class SpaceMarineManagement {
             System.out.println(RED + "No space marines found." + RESET);
             return;
         }
+        System.out.println(BLUE + "Space Marines:" + RESET);
         SpaceMarineDTOList.forEach(marine->System.out.println(marine));
 
     }
 
+    public void addSpaceMarine(SpaceMarineDTO spaceMarine) {
+        SpaceMarineDTOList.add(new SpaceMarineDTO(
+            spaceMarine.getName(),
+            spaceMarine.getBirthDate(),
+            spaceMarine.getGrade(),
+            spaceMarine.getSurname(),
+            spaceMarine.getMainWeapon(), 
+            spaceMarine.getSuccessMissionCount(), 
+            spaceMarine.getKillCount()));
+        this.marineCounter++;
+        saveSpaceMarinesToFile();   
+    }
+
     public void searchSpaceMarine(String name) {
-        SpaceMarineDTOList.stream()
+        Boolean found = SpaceMarineDTOList.stream()
             .filter(marine->marine.getName().equalsIgnoreCase(name))
-            .forEach(System.out::println);
+            .peek(System.out::println)
+            .findAny()
+            .isPresent();
+        if(!found) {
+            throw new SpaceMarineNotFoundException(RED + 
+            String.format("Space Marine that have name %s not found", name) 
+            + RESET);
+        }
     }
 
     public void updateSpaceMarine(Long id, SpaceMarineDTO newSpaceMarine) {
         for(SpaceMarineDTO marine : SpaceMarineDTOList) {
             if(marine.getId() == id) {
                 marine.setName(newSpaceMarine.getName());
+                marine.setSurname(newSpaceMarine.getSurname());
+                marine.setKillCount(newSpaceMarine.getKillCount());
+                marine.setSuccessMissionCount(newSpaceMarine.getSuccessMissionCount());
                 marine.setMainWeapon(newSpaceMarine.getMainWeapon());
-                marine.setGrade(newSpaceMarine.getGrade());
+                marine.setGrade();
                 marine.setBirthDate(newSpaceMarine.getBirthDate());
 
                 saveSpaceMarinesToFile();
 
                 System.out.println(
-                    YELLOW + "Space Marine updated..." + RESET
+                    BLUE + String.format("Space Marine %s updated...", newSpaceMarine.getName()) + RESET
                 );
                 return;
             }
@@ -125,11 +182,11 @@ public class SpaceMarineManagement {
 
     public void deleteSpaceMarine(Long id) {
         if(SpaceMarineDTOList.removeIf(marine -> marine.getId() == id)) {
-            System.out.println(YELLOW + "Marine deleted" + RESET);
+            System.out.println(YELLOW + String.format("Marine %s deleted", id) + RESET);
             saveSpaceMarinesToFile();
             return;
         }
-        System.out.println(RED + "No Marine..." + RESET);
+        System.out.println(RED + "No Marine Deleted..." + RESET);
     }
 
     // Bu methodu daha sonra private yapacağız.
