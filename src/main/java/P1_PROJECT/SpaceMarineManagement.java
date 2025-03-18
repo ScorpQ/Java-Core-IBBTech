@@ -1,7 +1,9 @@
 package P1_PROJECT;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import P1_PROJECT.CustomExceptions.SpaceMarineNotFoundException;
+
 public class SpaceMarineManagement {
 
     // Uyarı kodları
@@ -22,15 +25,14 @@ public class SpaceMarineManagement {
     // Çünkü primitive tipler stack'te saklanır.
     private ArrayList<SpaceMarineDTO> SpaceMarineDTOList = new ArrayList<>();
     private static final String FILE_NAME = "spaceMarinesFile.txt";
-    private long marineCounter = 0L;
 
     static {
         System.out.println(BLUE + "Space Marine Management System" + RESET);
     }
 
-
     // Constructor
     public SpaceMarineManagement() {
+        System.out.println(BLUE + "...YÜKLEME..." + RESET);
         loadSpaceMarinesFromFile();
     }
 
@@ -85,6 +87,11 @@ public class SpaceMarineManagement {
                     this.addSpaceMarine(spaceMarine);
                 break;
 
+                case 22:
+                    System.out.println("direkt ekleme yapınız...");
+                    this.addSpaceMarine(new SpaceMarineDTO());
+                break;
+
                 case 2:
                     this.listSpaceMarines();
                 break;
@@ -97,6 +104,7 @@ public class SpaceMarineManagement {
                 case 4:
                     System.out.println("Güncellenecek İstediğin Space Marine ID'sini giriniz...");
                     Long id = scanner.nextLong();
+                    scanner.nextLine();
                     System.out.println("Space Marine Name...");
                     String name = scanner.nextLine();
                     System.out.println("Space Marine Surname...");
@@ -144,13 +152,9 @@ public class SpaceMarineManagement {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(
             new FileInputStream(FILE_NAME))) {
             SpaceMarineDTOList = (ArrayList<SpaceMarineDTO>) objectInputStream.readObject();
-            marineCounter = SpaceMarineDTOList.size();
 
             System.out.println(BLUE + String.format("Loaded %d space marines from file.", SpaceMarineDTOList.size()) + RESET);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-/*         catch (FileNotFoundException fileNotFoundException) {
+        } catch (FileNotFoundException fileNotFoundException) {
             System.out.println(RED + " Dosyadan yüklenen Space Marine Kaydı bulunamadı " + RESET);
             fileNotFoundException.printStackTrace();
             
@@ -160,13 +164,13 @@ public class SpaceMarineManagement {
             
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
-        } */
+        } 
     }
 
     public void listSpaceMarines() {
         // Daha sonra dosyayı da açıp görüntülemeliyiz.
         if(SpaceMarineDTOList.isEmpty()) {
-            System.out.println(RED + "No space marines found." + RESET);
+            System.out.println(RED + "No spzace marines found." + RESET);
             return;
         }
         System.out.println(BLUE + "Space Marines:" + RESET);
@@ -182,7 +186,6 @@ public class SpaceMarineManagement {
             spaceMarine.getMainWeapon(), 
             spaceMarine.getSuccessMissionCount(), 
             spaceMarine.getKillCount()));
-        this.marineCounter++;
         saveSpaceMarinesToFile();   
     }
 
@@ -232,8 +235,8 @@ public class SpaceMarineManagement {
 
     // Bu methodu daha sonra private yapacağız.
     public void saveSpaceMarinesToFile() {
-        try(FileOutputStream myWriter = new FileOutputStream(FILE_NAME, true)) {
-            myWriter.write((SpaceMarineDTOList.toString() + "\n").getBytes());
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(SpaceMarineDTOList);
         } catch (Exception e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

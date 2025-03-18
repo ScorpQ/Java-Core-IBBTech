@@ -25,56 +25,73 @@ public class SpaceMarineDTO implements Serializable{
     public static final Long serialVersionNumber = 1L;
     
     // Fields
-    private int id;
+    private long id;
     private String name;
     private float grade; // calculated with killCount and successMissionCount
     private Integer killCount;
     private String surname;
-    private Date createdDate;
+    private LocalDateTime createdDate; // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
     private String mainWeapon;
     private Integer successMissionCount;
-    private LocalDateTime birthDate;
+    private LocalDateTime birthDate; // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
+    private long marineCounter = 0L;
 
     // Constructor parametresiz
     public SpaceMarineDTO() {
-        this.id = 5;
-        this.name = "";
-        this.grade = 0;
-        this.killCount = 0;
-        this.surname = "";
-        this.createdDate = new Date(System.currentTimeMillis());
-        this.mainWeapon = "";
-        this.successMissionCount = 0;
-        this.birthDate = LocalDateTime.now();
+        this.id = (long) ++marineCounter;
+        this.name = "test";
+        this.killCount = 4;
+        this.surname = "test";
+        this.createdDate = LocalDateTime.now(); // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
+        this.mainWeapon = "test";
+        this.successMissionCount = 4;
+        this.grade = calculateGrade();
+        this.birthDate = LocalDateTime.now(); // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
     }
 
     // Constructor parametreli
     public SpaceMarineDTO(String name, LocalDateTime birthDate, String surname, String mainWeapon, int successMissionCount, int killCount) {
-        this.id = 5;
+        this.id = (long) ++marineCounter; 
         this.name = name;
-        this.grade = calculateGrade();
         this.killCount = killCount;
         this.surname = surname;
-        this.createdDate = new Date(System.currentTimeMillis());
+        this.createdDate = LocalDateTime.now();
         this.mainWeapon = mainWeapon;
         this.successMissionCount = successMissionCount;
+        this.grade = calculateGrade();
         this.birthDate = birthDate;
     }
 
     public float calculateGrade() {
-        if(killCount == null || successMissionCount == null) {
+        if(this.killCount == null || this.successMissionCount == null) {
             return 0;
         } else {
             return (float) (this.successMissionCount * 0.6 + this.killCount * 0.4);
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+            "Space Marine [ID: %d | İsim: %s %s | Silah: %s | Kill Count: %d | Görev Sayısı: %d | Puan: %.2f | Doğum Tarihi: %s | Oluşturulma Tarihi: %s]",
+            id,
+            name,
+            surname,
+            mainWeapon,
+            killCount,
+            successMissionCount,
+            grade,
+            birthDate,
+            createdDate
+        );
+    }
+
     // Methodlar  
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
