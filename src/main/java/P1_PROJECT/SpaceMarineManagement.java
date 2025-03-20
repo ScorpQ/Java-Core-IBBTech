@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import P1_PROJECT.CustomExceptions.SpaceMarineNotFoundException;
+import P1_PROJECT.Enum.EnumMarine;
 
 public class SpaceMarineManagement {
 
@@ -185,7 +186,8 @@ public class SpaceMarineManagement {
             spaceMarine.getSurname(),
             spaceMarine.getMainWeapon(), 
             spaceMarine.getSuccessMissionCount(), 
-            spaceMarine.getKillCount()));
+            spaceMarine.getKillCount(),
+            spaceMarine.getMarineType()));
         saveSpaceMarinesToFile();   
     }
 
@@ -233,10 +235,6 @@ public class SpaceMarineManagement {
         System.out.println(RED + "No Marine Deleted..." + RESET);
     }
 
-    public void setMarineType(){
-        
-    }
-
     // Bu methodu daha sonra private yapacağız.
     public void saveSpaceMarinesToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
@@ -245,5 +243,20 @@ public class SpaceMarineManagement {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+    }
+
+    public EnumMarine setMarineType(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Marine Type...\n 1- Ultramarines\n 2- Terrormarines\n 3- Deathmarines\n 4- Inceptor\n 5- Terminator");
+        int marineType = scanner.nextInt();
+        EnumMarine switchMarineType = switch(marineType) {
+            case 1 -> EnumMarine.ULTRAMARINES;
+            case 2 -> EnumMarine.TERRORMARINES;
+            case 3 -> EnumMarine.DEATHMARINES;
+            case 4 -> EnumMarine.INCEPTORMARINES;
+            case 5 -> EnumMarine.TERMINATORMARINES;
+            default -> throw new IllegalArgumentException("Invalid marine type");
+        };
+        return switchMarineType;
     }
 }

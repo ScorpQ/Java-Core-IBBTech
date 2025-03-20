@@ -3,6 +3,7 @@ package P1_PROJECT;
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Scanner;
 
 import P1_PROJECT.Enum.EnumMarine;
 
@@ -87,7 +88,8 @@ public class SpaceMarineDTO implements Serializable{
             successMissionCount,
             grade,
             birthDate,
-            createdDate
+            createdDate,
+            marineType
         );
     }
 
