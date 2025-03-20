@@ -1,0 +1,9 @@
+package P1_PROJECT.Enum;
+
+public enum EnumMarine {
+    ULTRAMARINES,
+    TERRORMARINES,
+    DEATHMARINES,
+    INCEPTORMARINES,
+    TERMINATORMARINES
+}

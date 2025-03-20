@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
+import P1_PROJECT.Enum.EnumMarine;
+
 
 // Single Responsibility Principle'a aykırı:
 // Birden fazla class eklemek,
@@ -26,6 +28,7 @@ public class SpaceMarineDTO implements Serializable{
     
     // Fields
     private long id;
+    private EnumMarine marineType;
     private String name;
     private float grade; // calculated with killCount and successMissionCount
     private Integer killCount;
@@ -47,10 +50,11 @@ public class SpaceMarineDTO implements Serializable{
         this.successMissionCount = 4;
         this.grade = calculateGrade();
         this.birthDate = LocalDateTime.now(); // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
+        this.marineType = EnumMarine.ULTRAMARINES;
     }
 
     // Constructor parametreli
-    public SpaceMarineDTO(String name, LocalDateTime birthDate, String surname, String mainWeapon, int successMissionCount, int killCount) {
+    public SpaceMarineDTO(String name, LocalDateTime birthDate, String surname, String mainWeapon, int successMissionCount, int killCount, EnumMarine marineType) {
         this.id = (long) ++marineCounter; 
         this.name = name;
         this.killCount = killCount;
@@ -60,6 +64,7 @@ public class SpaceMarineDTO implements Serializable{
         this.successMissionCount = successMissionCount;
         this.grade = calculateGrade();
         this.birthDate = birthDate;
+        this.marineType = marineType;
     }
 
     public float calculateGrade() {
@@ -153,5 +158,13 @@ public class SpaceMarineDTO implements Serializable{
 
     public void setKillCount(int killCount) {
         this.killCount = killCount;
+    }
+
+    public EnumMarine getMarineType() {
+        return marineType;
+    }
+
+    public void setMarineType(EnumMarine marineType) {
+        this.marineType = marineType;
     }
 }

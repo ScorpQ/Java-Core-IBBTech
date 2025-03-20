@@ -83,7 +83,7 @@ public class SpaceMarineManagement {
                     spaceMarine.setSuccessMissionCount(scanner.nextInt());
 
                     spaceMarine.setGrade(); //Buna gerek olmayabilir. Kontrol edicez dosyadan.
-
+                    
                     this.addSpaceMarine(spaceMarine);
                 break;
 
@@ -118,9 +118,9 @@ public class SpaceMarineManagement {
                     int killCount = scanner.nextInt();
                     System.out.println("Space Marine Success Mission Count...");
                     int successMissionCount = scanner.nextInt();
-
+                    /// BURADA KALDIN setMarineType() BUNU GÜNCELLEMEDE VE DİĞER YERLERDE KULLANMAM LAZIM....
                     try {
-                        this.updateSpaceMarine(id, new SpaceMarineDTO(name, birthDate, surname, mainWeapon, successMissionCount, killCount));
+                        this.updateSpaceMarine(id, new SpaceMarineDTO(name, birthDate, surname, mainWeapon, successMissionCount, killCount, setMarineType()));
                     } catch (SpaceMarineNotFoundException e) {
                         System.out.println(e.getMessage());
                     }
@@ -231,6 +231,10 @@ public class SpaceMarineManagement {
             return;
         }
         System.out.println(RED + "No Marine Deleted..." + RESET);
+    }
+
+    public void setMarineType(){
+        
     }
 
     // Bu methodu daha sonra private yapacağız.
