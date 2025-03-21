@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +24,8 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     public static final String YELLOW = "\033[0;33m";
     public static final String RESET = "\033[0m"; 
     public static final String BLUE = "\033[0;34m";
+
+    Scanner scanner = new Scanner(System.in);
 
     // Fields
     // ArrayList heap'te saklandığı için primitive tipleri tutamaz,
@@ -39,8 +43,83 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         loadSpaceMarinesFromFile();
     }
 
+    /////////////////////////////////////////
+    public void chooseMarineAdd() {
+        SpaceMarineDTO spaceMarine = new SpaceMarineDTO();
+
+        System.out.println("Space Marine Name...");
+        spaceMarine.setName(scanner.nextLine());
+        
+        System.out.println("Space Marine Surname...");
+        spaceMarine.setSurname(scanner.nextLine());
+        
+        System.out.println("Space Marine Birth Date (yyyy-MM-dd HH:mm)...");
+        String dateStr = scanner.nextLine();
+        spaceMarine.setBirthDate(LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            
+        System.out.println("Space Marine Main Weapon...");
+        spaceMarine.setMainWeapon(scanner.nextLine());
+
+        System.out.println("Space Marine Kill Count...");
+        spaceMarine.setKillCount(scanner.nextInt());
+
+        System.out.println("Space Marine Success Mission Count...");
+        spaceMarine.setSuccessMissionCount(scanner.nextInt());
+
+        spaceMarine.setGrade(); //Buna gerek olmayabilir. Kontrol edicez dosyadan.
+        
+        this.addSpaceMarine(spaceMarine);
+    }
+
+    public void chooseMarineList() {
+        this.listSpaceMarines();
+    }
+
+    public void chooseMarineSearch() {
+        System.out.println("Space Marine Name...");
+        this.searchSpaceMarine(scanner.nextLine());
+    }
+
+    public void chooseMarineUpdate() {
+        System.out.println("Güncellenecek İstediğin Space Marine ID'sini giriniz...");
+        Long id = scanner.nextLong();
+        scanner.nextLine();
+        System.out.println("Space Marine Name...");
+        String name = scanner.nextLine();
+        System.out.println("Space Marine Surname...");
+        String surname = scanner.nextLine();
+        System.out.println("Space Marine Birth Date (yyyy-MM-dd HH:mm)...");
+        String dateInput = scanner.nextLine();
+        LocalDateTime birthDate = LocalDateTime.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        System.out.println("Space Marine Main Weapon...");
+        String mainWeapon = scanner.nextLine();
+        System.out.println("Space Marine Kill Count...");
+        int killCount = scanner.nextInt();
+        System.out.println("Space Marine Success Mission Count...");
+        int successMissionCount = scanner.nextInt();
+        /// BURADA KALDIN setMarineType() BUNU GÜNCELLEMEDE VE DİĞER YERLERDE KULLANMAM LAZIM....
+        try {
+            this.updateSpaceMarine(id, new SpaceMarineDTO(name, birthDate, surname, mainWeapon, successMissionCount, killCount, setMarineType()));
+        } catch (SpaceMarineNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void chooseMarineDelete() {
+        System.out.println("Silinecek Space Marine ID'sini giriniz...");
+        this.deleteSpaceMarine(scanner.nextLong()); 
+    } 
+
+    public void chooseMarineCount() {
+        System.out.println(BLUE + String.format("Total Space Marine Count %n", SpaceMarineDTOList.size()) + RESET);
+    }
+
+    public void chooseMarineRandom() {
+        System.out.println("Rastgele Space Marine Getir...");
+        this.getRandomSpaceMarine();
+    }
+
     public void choose() {
-        Scanner scanner = new Scanner(System.in);
         byte selected = 0;
         while(true) {
             System.out.println(
@@ -53,9 +132,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
                 "\t\n 6 - Toplam Space Marine Sayısı" +
                 "\t\n 7 - Dosya kaydetme" +
                 "\t\n 8 - Space Marine Rastgele Getir" +
-                "\t\n 9 - Space Marine Güç Hesaplama" +
-                "\t\n 10 - Space Marine En Çok Kill Count ve En az kill count" +
-                "\t\n 11 - Space Marine Doğum Tarihlerine Göre Sıralama"
+                "\t\n 9 - Space Marine Güç Hesaplama" 
             );
 
             // Seçim yapılır 
@@ -64,30 +141,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
 
             switch(selected) {
                 case 1:
-                    SpaceMarineDTO spaceMarine = new SpaceMarineDTO();
-
-                    System.out.println("Space Marine Name...");
-                    spaceMarine.setName(scanner.nextLine());
-                    
-                    System.out.println("Space Marine Surname...");
-                    spaceMarine.setSurname(scanner.nextLine());
-                    
-                    System.out.println("Space Marine Birth Date (yyyy-MM-dd HH:mm)...");
-                    String dateStr = scanner.nextLine();
-                    spaceMarine.setBirthDate(LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-                        
-                    System.out.println("Space Marine Main Weapon...");
-                    spaceMarine.setMainWeapon(scanner.nextLine());
-
-                    System.out.println("Space Marine Kill Count...");
-                    spaceMarine.setKillCount(scanner.nextInt());
-
-                    System.out.println("Space Marine Success Mission Count...");
-                    spaceMarine.setSuccessMissionCount(scanner.nextInt());
-
-                    spaceMarine.setGrade(); //Buna gerek olmayabilir. Kontrol edicez dosyadan.
-                    
-                    this.addSpaceMarine(spaceMarine);
+                    chooseMarineAdd();
                 break;
 
                 case 22:
@@ -96,52 +150,35 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
                 break;
 
                 case 2:
-                    this.listSpaceMarines();
+                    chooseMarineList();
                 break;
 
                 case 3:
-                    System.out.println("Space Marine Name...");
-                    this.searchSpaceMarine(scanner.nextLine());
+                    chooseMarineSearch();
                 break;
 
                 case 4:
-                    System.out.println("Güncellenecek İstediğin Space Marine ID'sini giriniz...");
-                    Long id = scanner.nextLong();
-                    scanner.nextLine();
-                    System.out.println("Space Marine Name...");
-                    String name = scanner.nextLine();
-                    System.out.println("Space Marine Surname...");
-                    String surname = scanner.nextLine();
-                    System.out.println("Space Marine Birth Date (yyyy-MM-dd HH:mm)...");
-                    String dateInput = scanner.nextLine();
-                    LocalDateTime birthDate = LocalDateTime.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-                    System.out.println("Space Marine Main Weapon...");
-                    String mainWeapon = scanner.nextLine();
-                    System.out.println("Space Marine Kill Count...");
-                    int killCount = scanner.nextInt();
-                    System.out.println("Space Marine Success Mission Count...");
-                    int successMissionCount = scanner.nextInt();
-                    /// BURADA KALDIN setMarineType() BUNU GÜNCELLEMEDE VE DİĞER YERLERDE KULLANMAM LAZIM....
-                    try {
-                        this.updateSpaceMarine(id, new SpaceMarineDTO(name, birthDate, surname, mainWeapon, successMissionCount, killCount, setMarineType()));
-                    } catch (SpaceMarineNotFoundException e) {
-                        System.out.println(e.getMessage());
-                    }
+                    chooseMarineUpdate();
                 break;
 
                 case 5:
-                    System.out.println("Silinecek Space Marine ID'sini giriniz...");
-                    this.deleteSpaceMarine(scanner.nextLong()); 
+                    chooseMarineDelete();
                 break;
 
                 case 6:
-                    System.out.println(BLUE + String.format("Total Space Marine Count %n", SpaceMarineDTOList.size()) + RESET);
+                    chooseMarineCount();
                 break;
 
                 case 7:
+                    saveSpaceMarinesToFile();
                 break;
 
                 case 8:
+                    chooseMarineRandom();
+                break;
+
+                case 9:
+                    chooseSpaceMarineMinAndMaxGrade();
                 break;
             }
 
@@ -152,6 +189,10 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     }
 
     public void loadSpaceMarinesFromFile() {
+        
+        // Listedeki verileri temizle
+        SpaceMarineDTOList.clear();
+
         try (ObjectInputStream objectInputStream = new ObjectInputStream(
             new FileInputStream(FILE_NAME))) {
             SpaceMarineDTOList = (ArrayList<SpaceMarineDTO>) objectInputStream.readObject();
@@ -195,17 +236,13 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     }
 
     public SpaceMarineDTO searchSpaceMarine(String name) {
-        Boolean found = SpaceMarineDTOList.stream()
+        Optional<SpaceMarineDTO> spaceMarine = SpaceMarineDTOList.stream()
             .filter(marine->marine.getName().equalsIgnoreCase(name))
-            .peek(System.out::println)
-            .findAny()
-            .isPresent();
-        if(!found) {
-            throw new SpaceMarineNotFoundException(RED + 
+            .findFirst();
+        return spaceMarine.orElseThrow(
+            () -> new SpaceMarineNotFoundException(RED + 
             String.format("Space Marine that have name %s not found", name) 
-            + RESET);
-        }
-        return null;
+            + RESET));
     }
 
     public SpaceMarineDTO updateSpaceMarine(Long id, SpaceMarineDTO newSpaceMarine) {
@@ -248,6 +285,33 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         } catch (Exception e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
+        }
+    }
+
+    public SpaceMarineDTO getRandomSpaceMarine() {
+        try {
+            int randomIndex = new Random().nextInt(SpaceMarineDTOList.size());
+            return SpaceMarineDTOList.get(randomIndex);
+        } catch (Exception e) {
+            System.out.println("Sistemde yeterince Space Marine bulunamadı.");
+            return null;
+        }
+    }
+
+        public void chooseSpaceMarineMinAndMaxGrade() {
+        if (!SpaceMarineDTOList.isEmpty()) {
+            SpaceMarineDTO maxSpaceMarine = SpaceMarineDTOList.stream()
+                .max((s1, s2) -> Double.compare(s1.getGrade(), s2.getGrade()))
+                .orElse(null);
+
+            SpaceMarineDTO minSpaceMarine = SpaceMarineDTOList.stream()
+                .min((s1, s2) -> Double.compare(s1.getGrade(), s2.getGrade()))
+                .orElse(null);
+
+            System.out.println(BLUE + "En Yüksek Grade'e Sahip Space Marine: " + maxSpaceMarine + RESET);
+            System.out.println(BLUE + "En Düşük Grade'e Sahip Space Marine: " + minSpaceMarine + RESET);
+        } else {
+            System.out.println(RED + "Space Marine listesi boş." + RESET);
         }
     }
 
