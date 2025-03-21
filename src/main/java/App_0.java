@@ -1,12 +1,12 @@
 import AlgorithmSolving.ProblemSolver;
-import P1_PROJECT.SpaceMarineManagement;
+import P1_PROJECT.dao.SpaceMarineDao;
 
 public class App_0 
 {
     public static void main( String[] args )
     {
         ProblemSolver solver = new ProblemSolver();
-        SpaceMarineManagement spaceMarineManagement = new SpaceMarineManagement();
+        SpaceMarineDao spaceMarineManagement = new SpaceMarineDao();
         spaceMarineManagement.choose();
     }
 }

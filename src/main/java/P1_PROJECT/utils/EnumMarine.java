@@ -1,4 +1,4 @@
-package P1_PROJECT.Enum;
+package P1_PROJECT.utils;
 
 public enum EnumMarine {
     ULTRAMARINES,

@@ -1,11 +1,11 @@
-package P1_PROJECT;
+package P1_PROJECT.dto;
 
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-import P1_PROJECT.Enum.EnumMarine;
+import P1_PROJECT.utils.EnumMarine;
 
 
 // Single Responsibility Principle'a aykırı:

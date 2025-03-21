@@ -1,4 +1,4 @@
-package P1_PROJECT;
+package P1_PROJECT.dao;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import P1_PROJECT.CustomExceptions.SpaceMarineNotFoundException;
-import P1_PROJECT.Enum.EnumMarine;
 
-public class SpaceMarineManagement {
+import P1_PROJECT.customExceptions.SpaceMarineNotFoundException;
+import P1_PROJECT.dto.SpaceMarineDTO;
+import P1_PROJECT.utils.EnumMarine;
+
+public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
 
     // Uyarı kodları
     public static final String RED = "\033[0;31m"; 
@@ -32,7 +34,7 @@ public class SpaceMarineManagement {
     }
 
     // Constructor
-    public SpaceMarineManagement() {
+    public SpaceMarineDao() {
         System.out.println(BLUE + "...YÜKLEME..." + RESET);
         loadSpaceMarinesFromFile();
     }
@@ -168,18 +170,18 @@ public class SpaceMarineManagement {
         } 
     }
 
-    public void listSpaceMarines() {
+    public ArrayList<SpaceMarineDTO> listSpaceMarines() {
         // Daha sonra dosyayı da açıp görüntülemeliyiz.
         if(SpaceMarineDTOList.isEmpty()) {
             System.out.println(RED + "No spzace marines found." + RESET);
-            return;
+            throw new SpaceMarineNotFoundException(RED + "No space marines found." + RESET);
         }
         System.out.println(BLUE + "Space Marines:" + RESET);
         SpaceMarineDTOList.forEach(marine->System.out.println(marine));
-
+        return SpaceMarineDTOList;
     }
 
-    public void addSpaceMarine(SpaceMarineDTO spaceMarine) {
+    public SpaceMarineDTO addSpaceMarine(SpaceMarineDTO spaceMarine) {
         SpaceMarineDTOList.add(new SpaceMarineDTO(
             spaceMarine.getName(),
             spaceMarine.getBirthDate(),
@@ -189,9 +191,10 @@ public class SpaceMarineManagement {
             spaceMarine.getKillCount(),
             spaceMarine.getMarineType()));
         saveSpaceMarinesToFile();   
+        return spaceMarine;
     }
 
-    public void searchSpaceMarine(String name) {
+    public SpaceMarineDTO searchSpaceMarine(String name) {
         Boolean found = SpaceMarineDTOList.stream()
             .filter(marine->marine.getName().equalsIgnoreCase(name))
             .peek(System.out::println)
@@ -202,9 +205,10 @@ public class SpaceMarineManagement {
             String.format("Space Marine that have name %s not found", name) 
             + RESET);
         }
+        return null;
     }
 
-    public void updateSpaceMarine(Long id, SpaceMarineDTO newSpaceMarine) {
+    public SpaceMarineDTO updateSpaceMarine(Long id, SpaceMarineDTO newSpaceMarine) {
         for(SpaceMarineDTO marine : SpaceMarineDTOList) {
             if(marine.getId() == id) {
                 marine.setName(newSpaceMarine.getName());
@@ -220,19 +224,21 @@ public class SpaceMarineManagement {
                 System.out.println(
                     BLUE + String.format("Space Marine %s updated...", newSpaceMarine.getName()) + RESET
                 );
-                return;
+                return newSpaceMarine;
             }
-            System.out.println(RED + "Unavabile Space Marine" + RESET);
         }
+        System.out.println(RED + "Unavabile Space Marine" + RESET);
+        return null;
     }
 
-    public void deleteSpaceMarine(Long id) {
+    public SpaceMarineDTO deleteSpaceMarine(Long id) {
         if(SpaceMarineDTOList.removeIf(marine -> marine.getId() == id)) {
             System.out.println(YELLOW + String.format("Marine %s deleted", id) + RESET);
             saveSpaceMarinesToFile();
-            return;
+            return null;
         }
         System.out.println(RED + "No Marine Deleted..." + RESET);
+        return null;
     }
 
     // Bu methodu daha sonra private yapacağız.
