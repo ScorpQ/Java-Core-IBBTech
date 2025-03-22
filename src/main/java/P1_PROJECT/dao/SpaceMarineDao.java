@@ -16,16 +16,10 @@ import java.time.format.DateTimeFormatter;
 import P1_PROJECT.customExceptions.SpaceMarineNotFoundException;
 import P1_PROJECT.dto.SpaceMarineDTO;
 import P1_PROJECT.utils.EnumMarine;
+import P1_PROJECT.utils.errorColors;
 
 public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
-
-    // Uyarı kodları
-    public static final String RED = "\033[0;31m"; 
-    public static final String YELLOW = "\033[0;33m";
-    public static final String RESET = "\033[0m"; 
-    public static final String BLUE = "\033[0;34m";
-
-    Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     // Fields
     // ArrayList heap'te saklandığı için primitive tipleri tutamaz,
@@ -34,12 +28,13 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     private static final String FILE_NAME = "spaceMarinesFile.txt";
 
     static {
-        System.out.println(BLUE + "Space Marine Management System" + RESET);
+        System.out.println(errorColors.BLUE + "Space Marine Management System" + errorColors.RESET);
     }
 
     // Constructor
     public SpaceMarineDao() {
-        System.out.println(BLUE + "...YÜKLEME..." + RESET);
+        // Eğer spaceMarineFile yok ise oluştursun ve hata vermesin program ilk başlarken...
+        //createFileIfNotExists();
         loadSpaceMarinesFromFile();
     }
 
@@ -49,7 +44,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
 
         System.out.println("Space Marine Name...");
         spaceMarine.setName(scanner.nextLine());
-        
+
         System.out.println("Space Marine Surname...");
         spaceMarine.setSurname(scanner.nextLine());
         
@@ -111,7 +106,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     } 
 
     public void chooseMarineCount() {
-        System.out.println(BLUE + String.format("Total Space Marine Count %n", SpaceMarineDTOList.size()) + RESET);
+        System.out.println(errorColors.BLUE + String.format("Total Space Marine Count %n", SpaceMarineDTOList.size()) + errorColors.RESET);
     }
 
     public void chooseMarineRandom() {
@@ -180,6 +175,10 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
                 case 9:
                     chooseSpaceMarineMinAndMaxGrade();
                 break;
+
+                case 10:
+                    listOnlyGrandMasters();
+                break;
             }
 
             if(selected == 0) {
@@ -188,7 +187,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         }
     }
 
-    public void loadSpaceMarinesFromFile() {
+    public boolean loadSpaceMarinesFromFile() {
         
         // Listedeki verileri temizle
         SpaceMarineDTOList.clear();
@@ -196,55 +195,41 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         try (ObjectInputStream objectInputStream = new ObjectInputStream(
             new FileInputStream(FILE_NAME))) {
             SpaceMarineDTOList = (ArrayList<SpaceMarineDTO>) objectInputStream.readObject();
-
-            System.out.println(BLUE + String.format("Loaded %d space marines from file.", SpaceMarineDTOList.size()) + RESET);
+            System.out.println(errorColors.BLUE + String.format("Loaded %d space marines from file.", SpaceMarineDTOList.size()) + errorColors.RESET);
+            return true;
         } catch (FileNotFoundException fileNotFoundException) {
-            System.out.println(RED + " Dosyadan yüklenen Space Marine Kaydı bulunamadı " + RESET);
+            System.out.println(errorColors.RED + " Dosyadan yüklenen Space Marine Kaydı bulunamadı " + errorColors.RESET);
             fileNotFoundException.printStackTrace();
-            
+            return false;
         } catch (IOException io) {
-            System.out.println(RED + " Dosya Okuma Hatası" + RESET);
+            System.out.println(errorColors.RED + " Dosya Okuma Hatası" + errorColors.RESET);
             io.printStackTrace();
-            
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } 
+            return false;
+        }
     }
 
+    @Override
     public ArrayList<SpaceMarineDTO> listSpaceMarines() {
-        // Daha sonra dosyayı da açıp görüntülemeliyiz.
         if(SpaceMarineDTOList.isEmpty()) {
-            System.out.println(RED + "No spzace marines found." + RESET);
-            throw new SpaceMarineNotFoundException(RED + "No space marines found." + RESET);
+            throw new SpaceMarineNotFoundException(errorColors.RED + "No space marines found." + errorColors.RESET);
         }
-        System.out.println(BLUE + "Space Marines:" + RESET);
+        System.out.println(errorColors.BLUE + "Space Marines:" + errorColors.RESET);
         SpaceMarineDTOList.forEach(marine->System.out.println(marine));
         return SpaceMarineDTOList;
     }
 
-    public SpaceMarineDTO addSpaceMarine(SpaceMarineDTO spaceMarine) {
-        SpaceMarineDTOList.add(new SpaceMarineDTO(
-            spaceMarine.getName(),
-            spaceMarine.getBirthDate(),
-            spaceMarine.getSurname(),
-            spaceMarine.getMainWeapon(), 
-            spaceMarine.getSuccessMissionCount(), 
-            spaceMarine.getKillCount(),
-            spaceMarine.getMarineType()));
-        saveSpaceMarinesToFile();   
-        return spaceMarine;
-    }
-
+    @Override
     public SpaceMarineDTO searchSpaceMarine(String name) {
         Optional<SpaceMarineDTO> spaceMarine = SpaceMarineDTOList.stream()
             .filter(marine->marine.getName().equalsIgnoreCase(name))
             .findFirst();
         return spaceMarine.orElseThrow(
-            () -> new SpaceMarineNotFoundException(RED + 
+            () -> new SpaceMarineNotFoundException(errorColors.RED + 
             String.format("Space Marine that have name %s not found", name) 
-            + RESET));
-    }
+            + errorColors.RESET));
+    } 
 
+    @Override
     public SpaceMarineDTO updateSpaceMarine(Long id, SpaceMarineDTO newSpaceMarine) {
         for(SpaceMarineDTO marine : SpaceMarineDTOList) {
             if(marine.getId() == id) {
@@ -259,32 +244,80 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
                 saveSpaceMarinesToFile();
 
                 System.out.println(
-                    BLUE + String.format("Space Marine %s updated...", newSpaceMarine.getName()) + RESET
+                    errorColors.BLUE + String.format("Space Marine %s updated...", newSpaceMarine.getName()) + errorColors.RESET
                 );
                 return newSpaceMarine;
             }
         }
-        System.out.println(RED + "Unavabile Space Marine" + RESET);
+        System.out.println(errorColors.RED + "Space Marine not found" + errorColors.RESET);
         return null;
+    }
+
+    public SpaceMarineDTO addSpaceMarine(SpaceMarineDTO spaceMarine) {
+        try {
+            validateSpaceMarine(spaceMarine);
+            SpaceMarineDTOList.add(spaceMarine);
+            saveSpaceMarinesToFile();   
+            return spaceMarine;
+        } catch (Exception e) {
+            System.out.println(errorColors.RED + "An error occurred." + errorColors.RESET);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void validateSpaceMarine(SpaceMarineDTO spaceMarine) {
+        if(spaceMarine.getId() <= 1) {
+            throw new IllegalArgumentException("Space Marine ID have to be greater than 1.");
+        }
+        if(spaceMarine.getName() == null || spaceMarine.getName().isEmpty() || !spaceMarine.getName().matches("^[a-zA-Z]+$")) {
+            throw new IllegalArgumentException("Space Marine name can not contain numbers or special characters.");
+        }
+        if(spaceMarine.getSurname() == null || spaceMarine.getSurname().isEmpty() || !spaceMarine.getSurname().matches("^[a-zA-Z]+$")) {
+            throw new IllegalArgumentException("Space Marine surname can not contain numbers or special characters.");
+        }
+        if(spaceMarine.getMainWeapon() == null || spaceMarine.getMainWeapon().isEmpty()) {
+            throw new IllegalArgumentException("Space Marine main weapon can not be empty.");
+        }
+        if(spaceMarine.getSuccessMissionCount() <= 0) {
+            throw new IllegalArgumentException("Space Marine success mission count have to be greater than 0.");
+        }
+        if(spaceMarine.getBirthDate().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Space Marine birth date can not be in the future.");
+        }
+        if(spaceMarine.getKillCount() <= 0) {
+            throw new IllegalArgumentException("Space Marine kill count have to be greater than 0.");
+        }
+        if(spaceMarine.getMarineType() == null) {
+            throw new IllegalArgumentException("Space Marine marine type can not be empty.");
+        }
     }
 
     public SpaceMarineDTO deleteSpaceMarine(Long id) {
         if(SpaceMarineDTOList.removeIf(marine -> marine.getId() == id)) {
-            System.out.println(YELLOW + String.format("Marine %s deleted", id) + RESET);
+            System.out.println(errorColors.YELLOW + String.format("Marine %s deleted", id) + errorColors.RESET);
             saveSpaceMarinesToFile();
             return null;
         }
-        System.out.println(RED + "No Marine Deleted..." + RESET);
+        System.out.println(errorColors.RED + "No Marine Deleted..." + errorColors.RESET);
         return null;
     }
 
-    // Bu methodu daha sonra private yapacağız.
-    public void saveSpaceMarinesToFile() {
+    public boolean saveSpaceMarinesToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(SpaceMarineDTOList);
-        } catch (Exception e) {
-            System.out.println("An error occurred.");
+            return true;
+        } catch (FileNotFoundException e) {
+            System.out.println(errorColors.RED + "Dosya bulunamadı." + errorColors.RESET);
+            return false;
+        } catch (IOException e) {
+            System.out.println(errorColors.RED + "Dosya yazma hatası." + errorColors.RESET);
+            return false;
+        } 
+        catch (Exception e) {
+            System.out.println(errorColors.RED + "An error occurred." + errorColors.RESET);
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -298,7 +331,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         }
     }
 
-        public void chooseSpaceMarineMinAndMaxGrade() {
+    public void chooseSpaceMarineMinAndMaxGrade() {
         if (!SpaceMarineDTOList.isEmpty()) {
             SpaceMarineDTO maxSpaceMarine = SpaceMarineDTOList.stream()
                 .max((s1, s2) -> Double.compare(s1.getGrade(), s2.getGrade()))
@@ -308,15 +341,39 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
                 .min((s1, s2) -> Double.compare(s1.getGrade(), s2.getGrade()))
                 .orElse(null);
 
-            System.out.println(BLUE + "En Yüksek Grade'e Sahip Space Marine: " + maxSpaceMarine + RESET);
-            System.out.println(BLUE + "En Düşük Grade'e Sahip Space Marine: " + minSpaceMarine + RESET);
+            System.out.println(errorColors.BLUE + "En Yüksek Grade'e Sahip Space Marine: " + maxSpaceMarine + errorColors.RESET);
+            System.out.println(errorColors.BLUE + "En Düşük Grade'e Sahip Space Marine: " + minSpaceMarine + errorColors.RESET);
         } else {
-            System.out.println(RED + "Space Marine listesi boş." + RESET);
+            System.out.println(errorColors.RED + "Space Marine listesi boş." + errorColors.RESET);
         }
     }
 
+    private ArrayList<SpaceMarineDTO> listOnlyGrandMasters() {
+        ArrayList<SpaceMarineDTO> grandMasters = SpaceMarineDTOList.stream()
+        .filter(marine->marine.getIsGrandMaster().equalsIgnoreCase("Grand Master"))
+        .collect(Collectors.toList());
+        return grandMasters;
+    }   
+
+    private String marineDataToCSV(SpaceMarineDTO spaceMarine) {
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", 
+        spaceMarine.getId(),
+        spaceMarine.getName(),
+        spaceMarine.getSurname(),
+        spaceMarine.getMarineType(),
+        spaceMarine.getIsGrandMaster(),
+        spaceMarine.getGrade(),
+        spaceMarine.getSuccessMissionCount(),
+        spaceMarine.getKillCount(),
+        spaceMarine.getMainWeapon(),
+        spaceMarine.getBirthDate());
+    }
+
+    private String marineDataToCSV(ArrayList<SpaceMarineDTO> spaceMarines) {
+        return "zort";
+    }
+    
     public EnumMarine setMarineType(){
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Marine Type...\n 1- Ultramarines\n 2- Terrormarines\n 3- Deathmarines\n 4- Inceptor\n 5- Terminator");
         int marineType = scanner.nextInt();
         EnumMarine switchMarineType = switch(marineType) {

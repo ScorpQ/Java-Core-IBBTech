@@ -6,21 +6,16 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 
 import P1_PROJECT.utils.EnumMarine;
-
+import P1_PROJECT.utils.errorColors;
 
 // Single Responsibility Principle'a aykırı:
 // Birden fazla class eklemek,
 
 public class SpaceMarineDTO implements Serializable{
     
-    // Uyarı kodları
-    public static final String RED = "\033[0;31m"; 
-    public static final String YELLOW = "\033[0;33m";
-    public static final String RESET = "\033[0m"; 
-    
     static {
         System.out.println(
-            YELLOW + "SpaceMarineDTO classı yüklendi." + RESET
+            errorColors.YELLOW + "SpaceMarineDTO classı yüklendi." + errorColors.RESET
         );
     }
 
@@ -29,15 +24,16 @@ public class SpaceMarineDTO implements Serializable{
     
     // Fields
     private long id;
-    private EnumMarine marineType;
     private String name;
-    private float grade; // calculated with killCount and successMissionCount
-    private Integer killCount;
     private String surname;
-    private LocalDateTime createdDate; // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
+    private EnumMarine marineType;
     private String mainWeapon;
+    private float grade; // killCount ve successMissionCount ile hesaplanır. (..resultTerm ile aynı..)
+    private Integer killCount;
     private Integer successMissionCount;
+    private String isGrandMaster; // Belli bir Grade üstünde ise Grand Master sayılır.
     private LocalDateTime birthDate; // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
+    private LocalDateTime createdDate; // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
     private long marineCounter = 0L;
 
     // Constructor parametresiz
@@ -50,6 +46,7 @@ public class SpaceMarineDTO implements Serializable{
         this.mainWeapon = "test";
         this.successMissionCount = 4;
         this.grade = calculateGrade();
+        this.isGrandMaster = isGrandMaster();
         this.birthDate = LocalDateTime.now(); // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
         this.marineType = EnumMarine.ULTRAMARINES;
     }
@@ -76,6 +73,14 @@ public class SpaceMarineDTO implements Serializable{
         }
     }
 
+    public String isGrandMaster() {
+        if(this.grade >= 85) {
+            return "Grand Master";
+        } else {
+            return "Not Grand Master";
+        }
+    }
+
     @Override
     public String toString() {
         return String.format(
@@ -93,7 +98,7 @@ public class SpaceMarineDTO implements Serializable{
         );
     }
 
-    // Methodlar  
+    ///////////////////////////// Methods /////////////////////////////
     public long getId() {
         return id;
     }
@@ -168,5 +173,13 @@ public class SpaceMarineDTO implements Serializable{
 
     public void setMarineType(EnumMarine marineType) {
         this.marineType = marineType;
+    }
+
+    public String getIsGrandMaster() {
+        return isGrandMaster;
+    }
+
+    public void setIsGrandMaster(String isGrandMaster) {
+        this.isGrandMaster = isGrandMaster;
     }
 }
