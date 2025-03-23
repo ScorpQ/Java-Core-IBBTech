@@ -42,6 +42,13 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     public void chooseMarineAdd() {
         SpaceMarineDTO spaceMarine = new SpaceMarineDTO();
 
+        // En yüksek ID'yi bul
+        spaceMarine.setId(
+            SpaceMarineDTOList.stream()
+            .mapToLong(SpaceMarineDTO::getId)
+            .max()
+            .orElse(0) + 1);
+
         System.out.println("Space Marine Name...");
         spaceMarine.setName(scanner.nextLine());
 
@@ -92,9 +99,9 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         int killCount = scanner.nextInt();
         System.out.println("Space Marine Success Mission Count...");
         int successMissionCount = scanner.nextInt();
-        /// BURADA KALDIN setMarineType() BUNU GÜNCELLEMEDE VE DİĞER YERLERDE KULLANMAM LAZIM....
+
         try {
-            this.updateSpaceMarine(id, new SpaceMarineDTO(name, birthDate, surname, mainWeapon, successMissionCount, killCount, setMarineType()));
+            this.updateSpaceMarine(id, new SpaceMarineDTO(id, name, surname, birthDate , mainWeapon, successMissionCount, killCount, setMarineType()));
         } catch (SpaceMarineNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -205,6 +212,10 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
             System.out.println(errorColors.RED + " Dosya Okuma Hatası" + errorColors.RESET);
             io.printStackTrace();
             return false;
+        } catch (ClassNotFoundException e) {
+            System.out.println(errorColors.RED + " Sınıf bulunamadı hatası" + errorColors.RESET);
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -255,8 +266,13 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
 
     public SpaceMarineDTO addSpaceMarine(SpaceMarineDTO spaceMarine) {
         try {
+            // Validasyon
             validateSpaceMarine(spaceMarine);
+
+            // Listeye Ekleme
             SpaceMarineDTOList.add(spaceMarine);
+
+            // Dosyaya Kayıt
             saveSpaceMarinesToFile();   
             return spaceMarine;
         } catch (Exception e) {
@@ -349,10 +365,8 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     }
 
     private ArrayList<SpaceMarineDTO> listOnlyGrandMasters() {
-        ArrayList<SpaceMarineDTO> grandMasters = SpaceMarineDTOList.stream()
-        .filter(marine->marine.getIsGrandMaster().equalsIgnoreCase("Grand Master"))
-        .collect(Collectors.toList());
-        return grandMasters;
+   
+        return SpaceMarineDTOList;
     }   
 
     private String marineDataToCSV(SpaceMarineDTO spaceMarine) {

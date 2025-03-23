@@ -11,7 +11,7 @@ import P1_PROJECT.utils.errorColors;
 // Single Responsibility Principle'a aykırı:
 // Birden fazla class eklemek,
 
-public class SpaceMarineDTO implements Serializable{
+public class SpaceMarineDTO extends humanDTO implements Serializable{
     
     static {
         System.out.println(
@@ -23,45 +23,32 @@ public class SpaceMarineDTO implements Serializable{
     public static final Long serialVersionNumber = 1L;
     
     // Fields
-    private long id;
-    private String name;
-    private String surname;
     private EnumMarine marineType;
     private String mainWeapon;
     private float grade; // killCount ve successMissionCount ile hesaplanır. (..resultTerm ile aynı..)
     private Integer killCount;
     private Integer successMissionCount;
     private String isGrandMaster; // Belli bir Grade üstünde ise Grand Master sayılır.
-    private LocalDateTime birthDate; // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
-    private LocalDateTime createdDate; // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
     private long marineCounter = 0L;
 
     // Constructor parametresiz
     public SpaceMarineDTO() {
-        this.id = (long) ++marineCounter;
-        this.name = "test";
+        super();
         this.killCount = 4;
-        this.surname = "test";
-        this.createdDate = LocalDateTime.now(); // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
         this.mainWeapon = "test";
         this.successMissionCount = 4;
         this.grade = calculateGrade();
         this.isGrandMaster = isGrandMaster();
-        this.birthDate = LocalDateTime.now(); // Date yerine LocalDateTime kullanıyoruz çünkü Date kullanırken saat bilgisi alamıyoruz.
         this.marineType = EnumMarine.ULTRAMARINES;
     }
 
     // Constructor parametreli
-    public SpaceMarineDTO(String name, LocalDateTime birthDate, String surname, String mainWeapon, int successMissionCount, int killCount, EnumMarine marineType) {
-        this.id = (long) ++marineCounter; 
-        this.name = name;
-        this.killCount = killCount;
-        this.surname = surname;
-        this.createdDate = LocalDateTime.now();
+    public SpaceMarineDTO(long id, String name, String surname, LocalDateTime birthDate, String mainWeapon, int successMissionCount, int killCount, EnumMarine marineType) {
+        super(id, name, surname, birthDate);
         this.mainWeapon = mainWeapon;
+        this.killCount = killCount;
         this.successMissionCount = successMissionCount;
         this.grade = calculateGrade();
-        this.birthDate = birthDate;
         this.marineType = marineType;
     }
 
@@ -85,52 +72,16 @@ public class SpaceMarineDTO implements Serializable{
     public String toString() {
         return String.format(
             "Space Marine [ID: %d | İsim: %s %s | Silah: %s | Kill Count: %d | Görev Sayısı: %d | Puan: %.2f | Doğum Tarihi: %s | Oluşturulma Tarihi: %s]",
-            id,
-            name,
-            surname,
+            super.toString(),
             mainWeapon,
             killCount,
             successMissionCount,
             grade,
-            birthDate,
-            createdDate,
             marineType
         );
     }
 
     ///////////////////////////// Methods /////////////////////////////
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public LocalDateTime getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDateTime birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public float getGrade() {
         return grade;
     }
