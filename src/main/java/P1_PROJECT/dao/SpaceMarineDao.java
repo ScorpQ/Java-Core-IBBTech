@@ -70,16 +70,16 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
 
         spaceMarine.setGrade(); //Buna gerek olmayabilir. Kontrol edicez dosyadan.
         
-        this.addSpaceMarine(spaceMarine);
+        this.add(spaceMarine);
     }
 
     public void chooseMarineList() {
-        this.listSpaceMarines();
+        this.List();
     }
 
     public void chooseMarineSearch() {
         System.out.println("Space Marine Name...");
-        this.searchSpaceMarine(scanner.nextLine());
+        this.searchByName(scanner.nextLine());
     }
 
     public void chooseMarineUpdate() {
@@ -101,7 +101,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         int successMissionCount = scanner.nextInt();
 
         try {
-            this.updateSpaceMarine(id, new SpaceMarineDTO(id, name, surname, birthDate , mainWeapon, successMissionCount, killCount, setMarineType()));
+            this.updateById(id, new SpaceMarineDTO(id, name, surname, birthDate , mainWeapon, successMissionCount, killCount, setMarineType()));
         } catch (SpaceMarineNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -109,7 +109,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
 
     public void chooseMarineDelete() {
         System.out.println("Silinecek Space Marine ID'sini giriniz...");
-        this.deleteSpaceMarine(scanner.nextLong()); 
+        this.deleteById(scanner.nextLong()); 
     } 
 
     public void chooseMarineCount() {
@@ -148,7 +148,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
 
                 case 22:
                     System.out.println("direkt ekleme yapınız...");
-                    this.addSpaceMarine(new SpaceMarineDTO());
+                    this.add(new SpaceMarineDTO());
                 break;
 
                 case 2:
@@ -220,7 +220,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     }
 
     @Override
-    public ArrayList<SpaceMarineDTO> listSpaceMarines() {
+    public ArrayList<SpaceMarineDTO> List() {
         if(SpaceMarineDTOList.isEmpty()) {
             throw new SpaceMarineNotFoundException(errorColors.RED + "No space marines found." + errorColors.RESET);
         }
@@ -230,7 +230,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     }
 
     @Override
-    public SpaceMarineDTO searchSpaceMarine(String name) {
+    public SpaceMarineDTO searchByName(String name) {
         Optional<SpaceMarineDTO> spaceMarine = SpaceMarineDTOList.stream()
             .filter(marine->marine.getName().equalsIgnoreCase(name))
             .findFirst();
@@ -241,7 +241,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
     } 
 
     @Override
-    public SpaceMarineDTO updateSpaceMarine(Long id, SpaceMarineDTO newSpaceMarine) {
+    public SpaceMarineDTO updateById(Long id, SpaceMarineDTO newSpaceMarine) {
         for(SpaceMarineDTO marine : SpaceMarineDTOList) {
             if(marine.getId() == id) {
                 marine.setName(newSpaceMarine.getName());
@@ -264,7 +264,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         return null;
     }
 
-    public SpaceMarineDTO addSpaceMarine(SpaceMarineDTO spaceMarine) {
+    public SpaceMarineDTO add(SpaceMarineDTO spaceMarine) {
         try {
             // Validasyon
             validateSpaceMarine(spaceMarine);
@@ -309,7 +309,7 @@ public class SpaceMarineDao implements IDaoGeneric<SpaceMarineDTO>{
         }
     }
 
-    public SpaceMarineDTO deleteSpaceMarine(Long id) {
+    public SpaceMarineDTO deleteById(Long id) {
         if(SpaceMarineDTOList.removeIf(marine -> marine.getId() == id)) {
             System.out.println(errorColors.YELLOW + String.format("Marine %s deleted", id) + errorColors.RESET);
             saveSpaceMarinesToFile();

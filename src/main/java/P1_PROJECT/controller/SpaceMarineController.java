@@ -16,27 +16,33 @@ public class SpaceMarineController implements IDaoGeneric<SpaceMarineDTO> {
         this.spaceMarineDao = new SpaceMarineDao();
     }
 
+    @Override
     public void choose() {
         spaceMarineDao.choose();
     }
  
-    public SpaceMarineDTO addSpaceMarine(SpaceMarineDTO spaceMarine) {
-        return spaceMarineDao.addSpaceMarine(spaceMarine);
+    @Override
+    public SpaceMarineDTO add(SpaceMarineDTO spaceMarine) {
+        return spaceMarineDao.add(spaceMarine);
     }
 
-    public ArrayList<SpaceMarineDTO> listSpaceMarines() {
-        return spaceMarineDao.listSpaceMarines();
+    @Override
+    public ArrayList<SpaceMarineDTO> List() {
+        return spaceMarineDao.List();
     }
 
-    public SpaceMarineDTO searchSpaceMarine(String name) {
-        return spaceMarineDao.searchSpaceMarine(name);
+    @Override
+    public SpaceMarineDTO searchByName(String name) {
+        return spaceMarineDao.searchByName(name);
     }
 
-    public SpaceMarineDTO updateSpaceMarine(Long id, SpaceMarineDTO newSpaceMarine) {
-        return spaceMarineDao.updateSpaceMarine(id, newSpaceMarine);
+    @Override
+    public SpaceMarineDTO updateById(Long id, SpaceMarineDTO newSpaceMarine) {
+        return spaceMarineDao.updateById(id, newSpaceMarine);
     }
 
-    public SpaceMarineDTO deleteSpaceMarine(Long id) {
-        return spaceMarineDao.deleteSpaceMarine(id);
+    @Override
+    public SpaceMarineDTO deleteById(Long id) {
+        return spaceMarineDao.deleteById(id);
     }
 }

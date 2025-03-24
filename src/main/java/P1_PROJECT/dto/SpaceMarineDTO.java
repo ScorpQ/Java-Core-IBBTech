@@ -11,7 +11,7 @@ import P1_PROJECT.utils.errorColors;
 // Single Responsibility Principle'a aykırı:
 // Birden fazla class eklemek,
 
-public class SpaceMarineDTO extends humanDTO implements Serializable{
+public class SpaceMarineDTO extends HumanDTO implements Serializable{
     
     static {
         System.out.println(
