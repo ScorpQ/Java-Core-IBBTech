@@ -4,17 +4,17 @@ import java.sql.Connection;
 import java.util.ArrayList;
 public interface IDaoGeneric<T> {
 
-   public ArrayList<T> listSpaceMarines();
+   public ArrayList<T> List();
 
    public void choose();
 
-   public T addSpaceMarine(T t);
+   public T add(T t);
 
-   public T searchSpaceMarine(String name);
+   public T searchByName(String name);
 
-   public T updateSpaceMarine(Long id, T t);
+   public T updateById(Long id, T t);
 
-   public T deleteSpaceMarine(Long id);
+   public T deleteById(Long id);
 
    default Connection getConnection() {
       return null;
